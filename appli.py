@@ -6,7 +6,7 @@ import hashlib
 from tkinter import *
 from tkinter import messagebox 
 from tkinter import simpledialog
-
+import requests
 # Fonction pour hacher le mot de passe
 def hash_mots_de_passe(mots_de_passe):
     hashe = hashlib.sha256(mots_de_passe.encode())
@@ -66,7 +66,7 @@ def menu():
     bouton_quitter.pack()
     frame.pack(expand=YES)
     root.mainloop()
-
+    root.destroy()
 # Fonction pour créer le formulaire d'inscription
 def formulaire_inscription():
     global root, entre_pseudo, entre_mots_de_passe, entre_email
@@ -470,10 +470,18 @@ def mots_de_passe_compromis(mots_de_passe):
     return True
 
 # Fonction pour vérifier si le mot de passe est dans la liste des mots de passe compromis
-def alert(mots_de_passe):
-    with open('rockyou.txt', 'r') as fichier:
-        lignes = fichier.read()
-    return mots_de_passe in lignes
+def alert_mdp(mots_de_passe):
+    sha1_mots_de_passe = hashlib.sha1(mots_de_passe.encode('utf-8')).hexdigest().upper()
+    prefix = sha1_mots_de_passe[:5]
+    suffix = sha1_mots_de_passe[5:]
+    url = f"https://api.pwnedpasswords.com/range/{prefix}"
+    reponse = requests.get(url)
+    if reponse.status_code == 200:
+        hashes = (line.split(":")for line in reponse.text.splitlines())
+        for h , count in hashes : 
+            if h == suffix:
+                return int(count)
+    return 0
 
 # Fonction pour envoyer un email d'alerte
 def envoie_mail(pseudo, mots_de_passe):
@@ -484,7 +492,7 @@ def envoie_mail(pseudo, mots_de_passe):
     with open("utilisateur.csv", 'r', encoding='utf-8') as fichier:
         liste = fichier.read()
     recup = extraire(liste)
-    if alert(mots_de_passe):
+    if alert_mdp(mots_de_passe):
         for i in recup:
             if len(i) > 2 and i[2] == hash_mots_de_passe(mots_de_passe):
                 mail_client = i[1]
