@@ -7,6 +7,7 @@ from tkinter import *
 from tkinter import messagebox 
 from tkinter import simpledialog
 import requests
+import json
 # Fonction pour hacher le mot de passe
 def hash_mots_de_passe(mots_de_passe):
     hashe = hashlib.sha256(mots_de_passe.encode())
@@ -577,5 +578,36 @@ def formulaire_recherche_produit():
     bouton_soumettre.grid(row=1, column=1, padx=10, pady=10)
     root.mainloop()
 
+#fonction pour la simulation de la partie client
+def commande():
+    prenom_du_client = input("Entrer le prénom du client : ")
+    nom_du_client = input("entrer le nom du client")
+    nom_du_produit = input("Entrer le nom du produit : ")
+    vendeur = input("entrer le nom du commerçant : ")
+    with open('produit.txt','r') as fichier : 
+        liste = fichier.read()
+        f = extraire(liste)
+    
+        for i in range(0,len(f)-1) :
+            if f[i][0] == vendeur and f[i][1] == nom_du_produit : 
+                prix_unite = f[i][3]
+                
+            
+        quantite = input("combien ?")
+        prix = str(int(quantite) * int(prix_unite))
+        
+         
+        
+        with open("index.json","r") as fichier : 
+            data = json.load(fichier)
+        nouvelle_commande = {
+            "prénom du client": prenom_du_client,
+            "nom du client":nom_du_client,
+            "nom du produit ": nom_du_produit,
+            "quantité": quantite,
+            "prix": prix
+        }
+
 # Script principal
-menu()
+
+commande()
