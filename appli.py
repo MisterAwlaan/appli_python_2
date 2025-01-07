@@ -8,6 +8,7 @@ from tkinter import messagebox
 from tkinter import simpledialog
 import requests
 import json
+import os
 # Fonction pour hacher le mot de passe
 def hash_mots_de_passe(mots_de_passe):
     hashe = hashlib.sha256(mots_de_passe.encode())
@@ -593,14 +594,25 @@ def commande():
         
         nouvelle_commande = {
             "Vendeur":vendeur,
-            "nom du produit ": nom_du_produit,
-            "quantite": quantite,
-            "prix": prix
+            "nom du produit": nom_du_produit,
+            "quantite":quantite,
+            "prix":prix
         }
+    
+        if os.path.exists("index.json"):
+            try:
+                with open('index.json','r') as fichier :
+                 commandes = json.load(fichier)
+            except json.JSONDecodeError:
+                commandes = []
+        else:
+            commandes = []
+        
+        commandes.append(nouvelle_commande)
 
-        with open('index.json','a') as fichier :
-            json.dump(nouvelle_commande,fichier,indent=4)
+        with open('index.json','w') as fichier:
+            json.dump(commandes,fichier,indent=4)
+
 
 # Script principal
-
 commande()

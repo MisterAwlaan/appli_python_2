@@ -1,0 +1,14 @@
+[
+    {
+        "Vendeur": "Mister",
+        "nom du produit": "Ordinateur",
+        "quantite": "3",
+        "prix": "4500"
+    },
+    {
+        "Vendeur": "Mister",
+        "nom du produit": "Ordinateur",
+        "quantite": "1",
+        "prix": "1500"
+    }
+]
