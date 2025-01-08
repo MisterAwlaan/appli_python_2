@@ -1,3 +1,7 @@
 Mister,Souris,13,25
-Mister,Ordinateur,2000,1500
+Mister,Ordinateur,1995,1500
 Mister,Casque,2,5
+
+
+
+

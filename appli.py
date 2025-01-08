@@ -1,6 +1,7 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import matplotlib
 import csv
 import hashlib
 from tkinter import *
@@ -583,13 +584,20 @@ def formulaire_recherche_produit():
 def commande():
     nom_du_produit = input("Entrer le nom du produit : ")
     vendeur = input("entrer le nom du commerçant : ")
+    quantite = input("Entrer la quantité : ")
     with open('produit.txt','r') as fichier : 
         liste = fichier.read()
         f = extraire(liste)
-        for i in range(0,len(f)-1) :
-            if f[i][0] == vendeur and f[i][1] == nom_du_produit : 
+        for i in range(0,len(f)-1,1) :
+            if f[i][0] == vendeur and f[i][1] == nom_du_produit and int(f[i][2]) > int(quantite) : 
                 prix_unite = f[i][3]
-        quantite = input("la quantite : ")
+                f[i][2] = str(int(f[i][2]) - int(quantite))
+                
+        
+        y = [','.join(i) for i in f]
+        t = [element + '\n' for element in y]
+        resultat = ''.join(t)
+        
         prix = str(int(quantite) * int(prix_unite))
         
         nouvelle_commande = {
@@ -612,6 +620,13 @@ def commande():
 
         with open('index.json','w') as fichier:
             json.dump(commandes,fichier,indent=4)
+
+        with open('produit.txt','w') as fichier :
+            fichier.write(resultat)
+
+### fonction qui permet d'afficher les stats des commandes 
+def afficher_stat(pseudo):
+    pass
 
 
 # Script principal

@@ -10,5 +10,23 @@
         "nom du produit": "Ordinateur",
         "quantite": "1",
         "prix": "1500"
+    },
+    {
+        "Vendeur": "Mister",
+        "nom du produit": "Ordinateur",
+        "quantite": "2",
+        "prix": "3000"
+    },
+    {
+        "Vendeur": "Mister",
+        "nom du produit": "Ordinateur",
+        "quantite": "4",
+        "prix": "6000"
+    },
+    {
+        "Vendeur": "Mister",
+        "nom du produit": "Ordinateur",
+        "quantite": "5",
+        "prix": "7500"
     }
 ]
