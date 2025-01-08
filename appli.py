@@ -626,6 +626,8 @@ def commande():
 
 ### fonction qui permet d'afficher les stats des commandes 
 def afficher_stat(pseudo):
+    with open('index.json','r')as fichier :
+        pass
     pass
 
 
