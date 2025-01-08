@@ -632,10 +632,10 @@ def afficher_stat(pseudo):
     with open('index.json','r')as fichier :
         lecture = json.load(fichier)
     for i in range(0,len(lecture)-1,1) : 
-        if lecture[i]["Vendeur"] == pseudo: 
+        if lecture[i]["Vendeur"] == pseudo and lecture[i]["nom du produit"] not in liste1: 
             liste1.append(lecture[i]["nom du produit"])
     
-    
+    print(liste1)
     
     '''plt.plot(liste1,liste2)
     plt.show()'''    
