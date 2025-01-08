@@ -69,7 +69,7 @@ def menu():
     bouton_quitter.pack()
     frame.pack(expand=YES)
     root.mainloop()
-    root.destroy()
+    root.quit()
 # Fonction pour créer le formulaire d'inscription
 def formulaire_inscription():
     global root, entre_pseudo, entre_mots_de_passe, entre_email
@@ -120,7 +120,7 @@ def inscription(pseudo, mots_de_passe, email):
 def menu_utilisateur(pseudo, mots_de_passe):
     root = Tk()
     root.title("Menu Utilisateur")
-    root.geometry("1080x720")
+    root.geometry("1920x1080")
     root.config(background='#4351ee')
     frame = Frame(root, bg='#4351ee')
     label = Label(root, text=f"Bienvenue, {pseudo}", font=("Courrier", 40), bg='#4351ee')
@@ -134,6 +134,7 @@ def menu_utilisateur(pseudo, mots_de_passe):
     bouton_trier_alphabetique = Button(frame, text="Trier par ordre alphabétique", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: tri_par_ordre_alphabetique(root))
     bouton_trier_quantite = Button(frame, text="Trier par quantité", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: tri_par_ordre_croissant_de_la_quantite(root))
     bouton_rechercher_produit = Button(frame, text="Rechercher un produit", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: formulaire_recherche_produit())
+    bouton_voir_stat = Button(frame, text="Stat", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda:afficher_stat(pseudo))
     bouton_quitter = Button(frame, text="Quitter", font=("Courrier", 25), bg="white", fg="#4351ee", command=root.destroy)
     bouton_afficher_liste.pack()
     bouton_ajouter_produit.pack()
@@ -144,6 +145,7 @@ def menu_utilisateur(pseudo, mots_de_passe):
     bouton_trier_alphabetique.pack()
     bouton_trier_quantite.pack()
     bouton_rechercher_produit.pack()
+    bouton_voir_stat.pack() 
     bouton_quitter.pack()
     frame.pack(expand=YES)
     root.mainloop()
@@ -526,29 +528,43 @@ def envoie_mail(pseudo, mots_de_passe):
 # Fonction pour rechercher un produit
 def recherche_produit(nom_du_produit):
     t = tri_pour_recherche_dicho()
-    a = 0
-    b = len(t)
-    if b == 0:
+    if not t:
         messagebox.showinfo("Résultat de la recherche", "Aucun résultat trouvé.")
         return
-    while b > a + 1:
+
+    a = 0
+    b = len(t) - 1  # b doit être len(t) - 1 pour être dans les limites de la liste
+
+    while a <= b:
         m = (a + b) // 2
+        if m >= len(t):
+            print(f"Erreur: m={m} est en dehors des limites de la liste (len(t)={len(t)})")
+            break  # Sortir de la boucle si m est en dehors des limites
         if t[m][1] > nom_du_produit:
-            b = m
+            b = m - 1
+        elif t[m][1] < nom_du_produit:
+            a = m + 1
         else:
-            a = m
-    if t[a][1] == nom_du_produit:
+            resultat = t[m]
+            y = [''.join(map(str, i)) for i in resultat]
+            result = ';'.join(y)
+            afficher_resultat(result)
+            return
+
+    # Vérifier les indices a et b après la boucle
+    if a < len(t) and t[a][1] == nom_du_produit:
         resultat = t[a]
-        y = [','.join(i) for i in resultat]
+        y = [''.join(map(str, i)) for i in resultat]
         result = ';'.join(y)
         afficher_resultat(result)
-    elif t[b][1] == nom_du_produit:
+    elif b < len(t) and t[b][1] == nom_du_produit:
         resultat = t[b]
-        y = [','.join(i) for i in resultat]
-        result = ''.join(y)
+        y = [','.join(map(str, i)) for i in resultat]
+        result = ';'.join(y)
         afficher_resultat(result)
     else:
         messagebox.showinfo("Résultat de la recherche", "Aucun résultat trouvé.")
+
 
 # Fonction pour afficher le résultat de la recherche
 def afficher_resultat(resultat):
@@ -627,27 +643,36 @@ def commande():
 ### fonction qui permet d'afficher les stats des commandes 
 def afficher_stat(pseudo):
     liste1 = []
-    liste2 = []
-    count = 0
+    somme_dict = {}
+    
     with open('index.json','r')as fichier :
         lecture = json.load(fichier)
     
-    for i in range(0,len(lecture)-1,1) : 
-        if lecture[i]["Vendeur"] == pseudo and lecture[i]["nom du produit"] not in liste1: 
-            liste1.append(lecture[i]["nom du produit"])
-            
-    
+    for i in range(0,len(lecture),1) : 
+        if lecture[i]["Vendeur"]== pseudo and lecture[i]["nom du produit"] : 
+            liste1.append([lecture[i]["nom du produit"],int(lecture[i]["quantite"])])
     print(liste1)
-    print(liste2)
+
+    for item in liste1 :
+        key = item[0]
+        value = item[1]
+
+        if key in somme_dict:
+            somme_dict[key] += value
+        else:
+            somme_dict[key] = value
     
-    '''plt.plot(liste1,liste2)
-    plt.show()'''    
+    liste2 = list(somme_dict.keys())
+    liste3 = list(somme_dict.values())
 
     
-      
-            
+    plt.figure(figsize=(10, 6))
+    plt.plot(liste2, liste3, marker='o', linestyle='-',color='b')
 
+    plt.title('Stat des ventes')
+    plt.xlabel('Produit')
+    plt.ylabel('quantite commandé')
 
+    plt.show()
 # Script principal
-
-afficher_stat("Mister")
+menu()
