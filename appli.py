@@ -96,13 +96,15 @@ def soumettre_inscription():
     pseudo = entre_pseudo.get()
     mots_de_passe = entre_mots_de_passe.get()
     email = entre_email.get()
-    if inscription(pseudo, mots_de_passe, email):
-        messagebox.showinfo("Inscription réussie", "Votre compte a été créé avec succès.")
-        root.destroy()
-        menu()
-    else:
-        messagebox.showerror("Échec de l'inscription", "Impossible de créer le compte.")
-
+    if mots_de_passe_compromis(mots_de_passe):
+        if inscription(pseudo, mots_de_passe, email):
+            messagebox.showinfo("Inscription réussie", "Votre compte a été créé avec succès.")
+            root.destroy()
+            menu()
+        else:
+            messagebox.showerror("Échec de l'inscription", "Impossible de créer le compte.")
+    else : 
+            messagebox.showerror("Votre mots de passe n'est pas bon")
 # Fonction pour inscrire un nouvel utilisateur
 def inscription(pseudo, mots_de_passe, email):
     with open('utilisateur.csv', 'r', newline='') as fichier:
@@ -125,7 +127,7 @@ def menu_utilisateur(pseudo, mots_de_passe):
     frame = Frame(root, bg='#4351ee')
     label = Label(root, text=f"Bienvenue, {pseudo}", font=("Courrier", 40), bg='#4351ee')
     label.pack(expand=YES)
-    bouton_afficher_liste = Button(frame, text="Afficher la liste des articles", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: afficher_liste(root))
+    bouton_afficher_liste = Button(frame, text="Afficher la liste des articles", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: afficher_liste(root,pseudo))
     bouton_ajouter_produit = Button(frame, text="Ajouter un produit", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: formulaire_ajouter_produit(pseudo))
     bouton_supprimer_produit = Button(frame, text="Supprimer un produit", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: formulaire_supprimer_produit(pseudo))
     bouton_modifier_produit = Button(frame, text="Modifier un produit", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: formulaire_modifier_produit(pseudo))
@@ -151,10 +153,17 @@ def menu_utilisateur(pseudo, mots_de_passe):
     root.mainloop()
 
 # Fonction pour afficher la liste des articles
-def afficher_liste(root):
+def afficher_liste(root,pseudo):
+    contenue_final = []
     with open('produit.txt', 'r') as fichier:
-        contenu = fichier.read()
-    messagebox.showinfo("Liste des articles", contenu)
+        f = fichier.read()
+        contenu = extraire(f)
+        for i in range(len(contenu)):
+            if contenu[i][0] == pseudo:
+                contenue_final.append(contenu[i])
+        y = [','.join(i) for i in contenue_final]
+        result = '\n'.join(y)
+    messagebox.showinfo("Liste des articles",result)
 
 # Fonction pour créer le formulaire d'ajout de produit
 def formulaire_ajouter_produit(pseudo):
