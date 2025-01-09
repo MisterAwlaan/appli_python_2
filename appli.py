@@ -129,64 +129,69 @@ def soumettre_inscription():
     else:
         messagebox.showerror("Échec de l'inscription", "Impossible de créer le compte.")
 # Fonction pour inscrire un nouvel utilisateur
-def inscription(pseudo, mots_de_passe, email):
-    with open('utilisateur.csv', 'r', newline='') as fichier:
-        lecteur = csv.reader(fichier)
-        for ligne in lecteur:
-            if ligne and ligne[0] == pseudo:
-                messagebox.showerror("Erreur", f"Le pseudo '{pseudo}' existe déjà. Impossible de créer un nouveau compte.")
-                return False
-    with open('utilisateur.csv', 'a', newline='') as fichier:
-        ecriture = csv.writer(fichier)
-        ecriture.writerow([pseudo, email, hash_mots_de_passe(mots_de_passe)])
-    return True
+def afficher_liste(root):
+    with open('produit.txt', 'r') as fichier:
+        contenu = fichier.read()
+    messagebox.showinfo("Liste des articles", contenu)
 
-# Fonction pour créer le menu utilisateur
+# Ajouter d'autres fonctions selon ton besoin...
+
+# Menu utilisateur avec une barre de défilement améliorée
 def menu_utilisateur(pseudo, mots_de_passe):
-    root = Tk()
+    root = tk.Tk()
     root.title("Menu Utilisateur")
-    root.geometry("1920x1080")
-    root.config(background='#4351ee')
-    frame = Frame(root, bg='#4351ee')
-    label = Label(root, text=f"Bienvenue, {pseudo}", font=("Courrier", 40), bg='#4351ee')
-    label.pack(expand=YES)
-    bouton_afficher_liste = Button(frame, text="Afficher la liste des articles", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: afficher_liste(root))
-    bouton_ajouter_produit = Button(frame, text="Ajouter un produit", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: formulaire_ajouter_produit(pseudo))
-    bouton_supprimer_produit = Button(frame, text="Supprimer un produit", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: formulaire_supprimer_produit(pseudo))
-    bouton_modifier_produit = Button(frame, text="Modifier un produit", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: formulaire_modifier_produit(pseudo))
-    bouton_modifier_mdp = Button(frame, text="Modifier votre mot de passe", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: formulaire_modifier_mdp(pseudo, mots_de_passe))
-    bouton_trier_prix = Button(frame, text="Trier par prix", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: tri_par_ordre_croissant_prix(root))
-    bouton_trier_alphabetique = Button(frame, text="Trier par ordre alphabétique", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: tri_par_ordre_alphabetique(root))
-    bouton_trier_quantite = Button(frame, text="Trier par quantité", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: tri_par_ordre_croissant_de_la_quantite(root))
-    bouton_rechercher_produit = Button(frame, text="Rechercher un produit", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: formulaire_recherche_produit())
-    bouton_voir_stat = Button(frame, text="Stat", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda:afficher_stat(pseudo))
-    bouton_quitter = Button(frame, text="Quitter", font=("Courrier", 25), bg="white", fg="#4351ee", command=root.destroy)
-    bouton_afficher_liste.pack()
-    bouton_ajouter_produit.pack()
-    bouton_supprimer_produit.pack()
-    bouton_modifier_produit.pack()
-    bouton_modifier_mdp.pack()
-    bouton_trier_prix.pack()
-    bouton_trier_alphabetique.pack()
-    bouton_trier_quantite.pack()
-    bouton_rechercher_produit.pack()
-    bouton_voir_stat.pack() 
-    bouton_quitter.pack()
-    frame.pack(expand=YES)
+    root.geometry("1080x720")
+    root.configure(bg="#1e1e2f")
+
+    # Canvas pour pouvoir scroller
+    canvas = tk.Canvas(root)
+    scrollbar = tk.Scrollbar(root, orient="vertical", command=canvas.yview)
+    frame = tk.Frame(canvas, bg="#282a36", relief="ridge", bd=10)
+
+    canvas.configure(yscrollcommand=scrollbar.set)
+    scrollbar.pack(side="right", fill="y")
+    canvas.pack(side="left", fill="both", expand=True)
+
+    # Ajouter le frame dans le canvas
+    canvas.create_window((0, 0), window=frame, anchor="nw")
+    frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+
+    label = tk.Label(frame, text=f"Bienvenue, {pseudo}", font=("Helvetica", 20, "bold"), fg="white", bg="#282a36")
+    label.pack(pady=20, padx=10)  # Réduire les marges pour éviter les espaces blancs
+
+    boutons = [
+        ("Afficher la liste des articles", lambda: afficher_liste(root)),
+        ("Ajouter un produit", lambda: formulaire_ajouter_produit(pseudo)),
+        ("Supprimer un produit", lambda: formulaire_supprimer_produit(pseudo)),
+        ("Modifier un produit", lambda: formulaire_modifier_produit(pseudo)),
+        ("Modifier votre mot de passe", lambda: formulaire_modifier_mdp(pseudo, mots_de_passe)),
+        ("Trier par prix", lambda: tri_par_ordre_croissant_prix(root)),
+        ("Trier par ordre alphabétique", lambda: tri_par_ordre_alphabetique(root)),
+        ("Trier par quantité", lambda: tri_par_ordre_croissant_de_la_quantite(root)),
+        ("Rechercher un produit", lambda: formulaire_recherche_produit()),
+        ("Stat", lambda: afficher_stat(pseudo)),
+        ("Quitter", root.destroy)
+    ]
+
+    # Création des boutons avec plus de contrôle sur les marges et alignement
+    for text, command in boutons:
+        bouton = tk.Button(frame, text=text, command=command, font=("Helvetica", 14), bg="#6272a4", fg="white", 
+                           activebackground="#50fa7b", activeforeground="black", relief="raised", bd=5, width=30)
+        bouton.pack(pady=5, padx=10)  # Réduire l'espace autour des boutons
+
+    # Assurer que le frame prend bien toute la place
+    frame.pack(fill="both", expand=True, padx=5, pady=5)
+
     root.mainloop()
 
+# Exemple d'appel de la fonction menu_utilisateur
+
+
 # Fonction pour afficher la liste des articles
-def afficher_liste(root,pseudo):
-    contenue_final = []
+def afficher_liste(root):
     with open('produit.txt', 'r') as fichier:
-        f = fichier.read()
-        contenu = extraire(f)
-        for i in range(len(contenu)):
-            if contenu[i][0] == pseudo:
-                contenue_final.append(contenu[i])
-        y = [','.join(i) for i in contenue_final]
-        result = '\n'.join(y)
-    messagebox.showinfo("Liste des articles",result)
+        contenu = fichier.read()
+    messagebox.showinfo("Liste des articles", contenu)
 
 # Fonction pour créer le formulaire d'ajout de produit
 def formulaire_ajouter_produit(pseudo):
