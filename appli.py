@@ -30,6 +30,24 @@ def connexion(pseudo, mots_de_passe):
     messagebox.showerror("Échec de la connexion", "Pseudo ou mot de passe incorrect.")
     return False
 
+#Fonction pour les inscriptions
+def inscription(pseudo, mots_de_passe, email):
+    with open('utilisateur.csv', 'r', newline='') as fichier:
+        lecteur = csv.reader(fichier)
+        for ligne in lecteur:
+            if ligne and ligne[0] == pseudo:
+                messagebox.showerror("Erreur", f"Le pseudo '{pseudo}' existe déjà. Impossible de créer un nouveau compte.")
+                return False
+    with open('utilisateur.csv', 'a', newline='') as fichier:
+        ecriture = csv.writer(fichier)
+        ecriture.writerow([pseudo, email, hash_mots_de_passe(mots_de_passe)])
+    return True
+
+
+
+
+
+
 # Fonction pour soumettre le formulaire de connexion
 def soumettre_formulaire():
     pseudo = entre_pseudo.get()
