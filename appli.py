@@ -176,10 +176,17 @@ def menu_utilisateur(pseudo, mots_de_passe):
     root.mainloop()
 
 # Fonction pour afficher la liste des articles
-def afficher_liste(root):
+def afficher_liste(root,pseudo):
+    contenue_final = []
     with open('produit.txt', 'r') as fichier:
-        contenu = fichier.read()
-    messagebox.showinfo("Liste des articles", contenu)
+        f = fichier.read()
+        contenu = extraire(f)
+        for i in range(len(contenu)):
+            if contenu[i][0] == pseudo:
+                contenue_final.append(contenu[i])
+        y = [','.join(i) for i in contenue_final]
+        result = '\n'.join(y)
+    messagebox.showinfo("Liste des articles",result)
 
 # Fonction pour créer le formulaire d'ajout de produit
 def formulaire_ajouter_produit(pseudo):
