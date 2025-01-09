@@ -10,6 +10,9 @@ from tkinter import simpledialog
 import requests
 import json
 import os
+import tkinter as tk
+from tkinter import ttk
+from tkinter import font
 # Fonction pour hacher le mot de passe
 def hash_mots_de_passe(mots_de_passe):
     hashe = hashlib.sha256(mots_de_passe.encode())
@@ -38,57 +41,80 @@ def soumettre_formulaire():
 # Fonction pour créer le formulaire de connexion
 def formulaire_connexion():
     global root, entre_pseudo, entre_mots_de_passe
-    root = Tk()
+    root = tk.Tk()
     root.title("Connexion")
-    label_pseudo = Label(root, text="Pseudo")
-    label_pseudo.grid(row=0, column=0, padx=10, pady=10)
-    entre_pseudo = Entry(root)
+    root.geometry("400x300")
+    root.configure(bg="#1e1e2f")
+
+    frame = tk.Frame(root, bg="#282a36", relief="ridge", bd=5)
+    frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
+
+    label_pseudo = tk.Label(frame, text="Pseudo", font=("Helvetica", 12), fg="white", bg="#282a36")
+    label_pseudo.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+    entre_pseudo = tk.Entry(frame, font=("Helvetica", 12), bg="#44475a", fg="white", insertbackground="white", relief="sunken", bd=3)
     entre_pseudo.grid(row=0, column=1, padx=10, pady=10)
-    label_mots_de_passe = Label(root, text="Mot de passe : ")
-    label_mots_de_passe.grid(row=1, column=0, padx=10, pady=10)
-    entre_mots_de_passe = Entry(root, show='*')
+
+    label_mots_de_passe = tk.Label(frame, text="Mot de passe :", font=("Helvetica", 12), fg="white", bg="#282a36")
+    label_mots_de_passe.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+    entre_mots_de_passe = tk.Entry(frame, show='*', font=("Helvetica", 12), bg="#44475a", fg="white", insertbackground="white", relief="sunken", bd=3)
     entre_mots_de_passe.grid(row=1, column=1, padx=10, pady=10)
-    bouton_soumettre = Button(root, text="Soumettre", command=soumettre_formulaire)
-    bouton_soumettre.grid(row=2, column=1, padx=10, pady=10)
+
+    bouton_soumettre = tk.Button(frame, text="Soumettre", command=soumettre_formulaire, font=("Helvetica", 12), bg="#6272a4", fg="white", activebackground="#50fa7b", activeforeground="black", relief="raised", bd=5)
+    bouton_soumettre.grid(row=2, column=1, padx=10, pady=20)
+
     root.mainloop()
 
-# Fonction pour créer le menu principal
 def menu():
-    root = Tk()
+    root = tk.Tk()
     root.title("Gestionnaire de commande")
     root.geometry("1080x720")
-    root.config(background='#4351ee')
-    frame = Frame(root, bg='#4351ee')
-    label = Label(root, text="Bienvenue sur le gestionnaire de commande", font=("Courrier", 40), bg='#4351ee')
-    label.pack(expand=YES)
-    bouton_connexion = Button(frame, text="Connexion", font=("Courrier", 25), bg="white", fg="#4351ee", command=formulaire_connexion)
-    bouton_inscription = Button(frame, text="Inscription", font=("Courrier", 25), bg="white", fg="#4351ee", command=formulaire_inscription)
-    bouton_quitter = Button(frame, text="Aurevoir", font=("Courrier", 25), bg="white", fg="#4351ee", command=root.destroy)
-    bouton_connexion.pack()
-    bouton_inscription.pack()
-    bouton_quitter.pack()
-    frame.pack(expand=YES)
+    root.configure(bg="#1e1e2f")
+
+    frame = tk.Frame(root, bg="#282a36", relief="ridge", bd=10)
+    frame.pack(expand=True, fill=tk.BOTH, padx=40, pady=40)
+
+    label = tk.Label(frame, text="Bienvenue sur le gestionnaire de commande", font=("Helvetica", 20, "bold"), fg="white", bg="#282a36", relief="flat")
+    label.pack(pady=20)
+
+    bouton_connexion = tk.Button(frame, text="Connexion", command=formulaire_connexion, font=("Helvetica", 14), bg="#6272a4", fg="white", activebackground="#50fa7b", activeforeground="black", relief="raised", bd=5, width=15)
+    bouton_connexion.pack(pady=10)
+
+    bouton_inscription = tk.Button(frame, text="Inscription", command=formulaire_inscription, font=("Helvetica", 14), bg="#6272a4", fg="white", activebackground="#50fa7b", activeforeground="black", relief="raised", bd=5, width=15)
+    bouton_inscription.pack(pady=10)
+
+    bouton_quitter = tk.Button(frame, text="Quitter", command=root.destroy, font=("Helvetica", 14), bg="#ff5555", fg="white", activebackground="#ff79c6", activeforeground="black", relief="raised", bd=5, width=15)
+    bouton_quitter.pack(pady=10)
+
     root.mainloop()
-    root.quit()
-# Fonction pour créer le formulaire d'inscription
+
 def formulaire_inscription():
     global root, entre_pseudo, entre_mots_de_passe, entre_email
-    root = Tk()
+    root = tk.Tk()
     root.title("Inscription")
-    label_pseudo = Label(root, text="Pseudo")
-    label_pseudo.grid(row=0, column=0, padx=10, pady=10)
-    entre_pseudo = Entry(root)
+    root.geometry("400x400")
+    root.configure(bg="#1e1e2f")
+
+    frame = tk.Frame(root, bg="#282a36", relief="ridge", bd=5)
+    frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
+
+    label_pseudo = tk.Label(frame, text="Pseudo", font=("Helvetica", 12), fg="white", bg="#282a36")
+    label_pseudo.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+    entre_pseudo = tk.Entry(frame, font=("Helvetica", 12), bg="#44475a", fg="white", insertbackground="white", relief="sunken", bd=3)
     entre_pseudo.grid(row=0, column=1, padx=10, pady=10)
-    label_mots_de_passe = Label(root, text="Mot de passe : ")
-    label_mots_de_passe.grid(row=1, column=0, padx=10, pady=10)
-    entre_mots_de_passe = Entry(root, show='*')
+
+    label_mots_de_passe = tk.Label(frame, text="Mot de passe :", font=("Helvetica", 12), fg="white", bg="#282a36")
+    label_mots_de_passe.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+    entre_mots_de_passe = tk.Entry(frame, show='*', font=("Helvetica", 12), bg="#44475a", fg="white", insertbackground="white", relief="sunken", bd=3)
     entre_mots_de_passe.grid(row=1, column=1, padx=10, pady=10)
-    label_email = Label(root, text="Email : ")
-    label_email.grid(row=2, column=0, padx=10, pady=10)
-    entre_email = Entry(root)
+
+    label_email = tk.Label(frame, text="Email :", font=("Helvetica", 12), fg="white", bg="#282a36")
+    label_email.grid(row=2, column=0, padx=10, pady=10, sticky="w")
+    entre_email = tk.Entry(frame, font=("Helvetica", 12), bg="#44475a", fg="white", insertbackground="white", relief="sunken", bd=3)
     entre_email.grid(row=2, column=1, padx=10, pady=10)
-    bouton_soumettre = Button(root, text="Soumettre", command=soumettre_inscription)
-    bouton_soumettre.grid(row=3, column=1, padx=10, pady=10)
+
+    bouton_soumettre = tk.Button(frame, text="Soumettre", command=soumettre_inscription, font=("Helvetica", 12), bg="#6272a4", fg="white", activebackground="#50fa7b", activeforeground="black", relief="raised", bd=5)
+    bouton_soumettre.grid(row=3, column=1, padx=10, pady=20)
+
     root.mainloop()
 
 # Fonction pour soumettre le formulaire d'inscription
@@ -96,15 +122,12 @@ def soumettre_inscription():
     pseudo = entre_pseudo.get()
     mots_de_passe = entre_mots_de_passe.get()
     email = entre_email.get()
-    if mots_de_passe_compromis(mots_de_passe):
-        if inscription(pseudo, mots_de_passe, email):
-            messagebox.showinfo("Inscription réussie", "Votre compte a été créé avec succès.")
-            root.destroy()
-            menu()
-        else:
-            messagebox.showerror("Échec de l'inscription", "Impossible de créer le compte.")
-    else : 
-            messagebox.showerror("Votre mots de passe n'est pas bon")
+    if inscription(pseudo, mots_de_passe, email):
+        messagebox.showinfo("Inscription réussie", "Votre compte a été créé avec succès.")
+        root.destroy()
+        menu()
+    else:
+        messagebox.showerror("Échec de l'inscription", "Impossible de créer le compte.")
 # Fonction pour inscrire un nouvel utilisateur
 def inscription(pseudo, mots_de_passe, email):
     with open('utilisateur.csv', 'r', newline='') as fichier:
@@ -127,7 +150,7 @@ def menu_utilisateur(pseudo, mots_de_passe):
     frame = Frame(root, bg='#4351ee')
     label = Label(root, text=f"Bienvenue, {pseudo}", font=("Courrier", 40), bg='#4351ee')
     label.pack(expand=YES)
-    bouton_afficher_liste = Button(frame, text="Afficher la liste des articles", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: afficher_liste(root,pseudo))
+    bouton_afficher_liste = Button(frame, text="Afficher la liste des articles", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: afficher_liste(root))
     bouton_ajouter_produit = Button(frame, text="Ajouter un produit", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: formulaire_ajouter_produit(pseudo))
     bouton_supprimer_produit = Button(frame, text="Supprimer un produit", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: formulaire_supprimer_produit(pseudo))
     bouton_modifier_produit = Button(frame, text="Modifier un produit", font=("Courrier", 25), bg="white", fg="#4351ee", command=lambda: formulaire_modifier_produit(pseudo))
@@ -153,17 +176,10 @@ def menu_utilisateur(pseudo, mots_de_passe):
     root.mainloop()
 
 # Fonction pour afficher la liste des articles
-def afficher_liste(root,pseudo):
-    contenue_final = []
+def afficher_liste(root):
     with open('produit.txt', 'r') as fichier:
-        f = fichier.read()
-        contenu = extraire(f)
-        for i in range(len(contenu)):
-            if contenu[i][0] == pseudo:
-                contenue_final.append(contenu[i])
-        y = [','.join(i) for i in contenue_final]
-        result = '\n'.join(y)
-    messagebox.showinfo("Liste des articles",result)
+        contenu = fichier.read()
+    messagebox.showinfo("Liste des articles", contenu)
 
 # Fonction pour créer le formulaire d'ajout de produit
 def formulaire_ajouter_produit(pseudo):
@@ -208,13 +224,16 @@ def formulaire_supprimer_produit(pseudo):
 def supprimer_produit(pseudo, nom_du_produit, root):
     with open("produit.txt", "r") as fichier:
         lignes = fichier.readlines()
-    with open("produit.txt", 'w') as fichier:
-        for ligne in lignes:
-            parties = ligne.split(',')
-            if len(parties) >= 2 and (parties[0] != pseudo or parties[1] != nom_du_produit):
-                fichier.write(ligne)
-    messagebox.showinfo("Produit supprimé", f"Le produit '{nom_du_produit}' a été supprimé avec succès.")
-    root.destroy()
+        if lignes[0]==pseudo:
+            with open("produit.txt", 'w') as fichier:
+                for ligne in lignes:
+                    parties = ligne.split(',')
+                    if len(parties) >= 2 and (parties[0] != pseudo or parties[1] != nom_du_produit):
+                        fichier.write(ligne)
+            messagebox.showinfo("Produit supprimé", f"Le produit '{nom_du_produit}' a été supprimé avec succès.")
+            root.destroy()
+        else:
+            messagebox.showerror("Error", f"Vous ne pouvez pas supprimer le produit de votre concurrent !")
 
 # Fonction pour créer le formulaire de modification de produit
 def formulaire_modifier_produit(pseudo):
