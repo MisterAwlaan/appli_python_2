@@ -1,0 +1,9 @@
+
+FROM python:3.9-slim
+WORKDIR /appli_python
+COPY index.py .
+COPY data.json .
+COPY info.txt .
+COPY records.csv .
+RUN pip install -r requirements.txt
+CMD ["python", "index.py"]
