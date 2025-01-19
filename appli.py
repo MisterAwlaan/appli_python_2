@@ -185,7 +185,7 @@ def menu_utilisateur(pseudo, mots_de_passe):
     label.pack(pady=20, padx=10)  # Réduire les marges pour éviter les espaces blancs
 
     boutons = [
-        ("Afficher la liste des articles", lambda: afficher_liste(root)),
+        ("Afficher la liste des articles", lambda: afficher_liste(root,pseudo)),
         ("Ajouter un produit", lambda: formulaire_ajouter_produit(pseudo)),
         ("Supprimer un produit", lambda: formulaire_supprimer_produit(pseudo)),
         ("Modifier un produit", lambda: formulaire_modifier_produit(pseudo)),
@@ -265,10 +265,11 @@ def formulaire_supprimer_produit(pseudo):
     root.mainloop()
 
 # Fonction pour supprimer un produit
-def supprimer_produit(pseudo, nom_du_produit, root):
+def supprimer_produit(pseudo, nom_du_produit,root):
     with open("produit.txt", "r") as fichier:
         lignes = fichier.readlines()
-        if lignes[0]==pseudo:
+    for i in lignes:    
+        if pseudo in i and nom_du_produit in i:
             with open("produit.txt", 'w') as fichier:
                 for ligne in lignes:
                     parties = ligne.split(',')
@@ -276,9 +277,8 @@ def supprimer_produit(pseudo, nom_du_produit, root):
                         fichier.write(ligne)
             messagebox.showinfo("Produit supprimé", f"Le produit '{nom_du_produit}' a été supprimé avec succès.")
             root.destroy()
-        else:
-            messagebox.showerror("Error", f"Vous ne pouvez pas supprimer le produit de votre concurrent !")
-
+        
+    
 # Fonction pour créer le formulaire de modification de produit
 def formulaire_modifier_produit(pseudo):
     root = Tk()
@@ -747,4 +747,5 @@ def afficher_stat(pseudo):
 
     plt.show()
 # Script principal
-menu()
+
+Menu()

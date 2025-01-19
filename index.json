@@ -34,5 +34,11 @@
         "nom du produit": "Souris",
         "quantite": "3",
         "prix": "75"
+    },
+    {
+        "Vendeur": "Mister",
+        "nom du produit": "Ordinateur",
+        "quantite": "2",
+        "prix": "3000"
     }
 ]
